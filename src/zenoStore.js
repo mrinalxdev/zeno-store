@@ -16,6 +16,7 @@ class ZenoStore {
     //Deep State feature
     this.deepStateComparison = false;
     this.localStorageKey = "apiState";
+    this.initializeStateFromLocalStorage();
 
     //Error Handling Config
     this.errorHandler = null;
@@ -137,5 +138,73 @@ class ZenoStore {
       : { ...this.initialState };
     this.applyMiddleware(prevState, this.state);
     this.notifyListeners();
+
+    //Presist state to localStorage
+    this.presistentStateToLocalStorage();
+  }
+
+  async setStateAsync(newState, addToUndoStack = true) {
+    //Async state updates for the data fetching
+    try {
+      await new Promise((resolves) => setTimeout(resolves, 1000));
+      this.setState(newState, addToUndoStack);
+    } catch (err) {
+      this.handleError(err);
+    }
+  }
+
+  undo() {
+    if (this.undoStack.length > 0) {
+      const prevState = this.undoStack.pop();
+      this.redoStack.push(
+        this.deepStateComparison
+          ? JSON.parse(JSON.stringify(this.state))
+          : { ...this.state }
+      );
+      this.state = prevState;
+      this.notifyListeners();
+    }
+  }
+
+  redo() {
+    if (this.redoStack.length > 0) {
+      const nextState = this.redoStack.pop();
+      this.undoStack.push(
+        this.deepStateComparison
+          ? JSON.parse(JSON.stringify(this.state))
+          : { ...this.state }
+      );
+    }
+  }
+
+  mergeeState(partialState) {
+    try {
+      const nextState = this.deepStateComparison
+        ? JSON.parse(JSON.stringify({ ...this.state, ...partialState }))
+        : { ...this.state, ...partialState };
+      this.applyMiddleware(this.prevState, nextState);
+      this.prevState = this.deepStateComparison
+        ? JSON.parse(JSON.stringify(this.state))
+        : { ...this.state };
+
+      this.state = nextState;
+      this.notifyListeners();
+    } catch (err) {
+      this.handleError(err);
+    }
+  }
+
+  patchState(partialState) {
+    try {
+      const nextState = this.deepStateComparison
+        ? JSON.parse(JSON.stringify({ ...this.state, ...partialState }))
+        : { ...this.state, ...partialState };
+      this.applyMiddlewares(this.prevState, nextState);
+      this.prevState = this.deepStateComparison
+        ? JSON.parse(JSON.stringify(this.state))
+        : { ...this.state };
+      this.state = nextState;
+      this.notifyListeners();
+    } catch (err) {}
   }
 }
