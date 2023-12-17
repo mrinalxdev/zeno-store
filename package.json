@@ -1,0 +1,11 @@
+{
+  "name": "zeno-store",
+  "version": "1.0.0",
+  "description": "A package that handles complex state management",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mrinal Pramanick",
+  "license": "MIT"
+}
