@@ -1,4 +1,4 @@
-const fs = require("fs").promises;
+import { promises as fs } from "fs";
 
 class PresistenceMiddleware {
   constructor(
@@ -80,4 +80,4 @@ class PresistenceMiddleware {
   }
 }
 
-module.exports = PresistenceMiddleware;
+export default PresistenceMiddleware;
