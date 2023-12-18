@@ -16,11 +16,22 @@
 - [ ] Error Handling
 - [X] Undo / Redo Function 
 - [X] Custom Event Trigger
-- [ ] Debounce State Updates
+- [X] Debounce State Updates
 - [X] Batch Update Config. 
 - [X] Deep State Comparison
-- [ ] Persistent State Storage Configuration 
-- [ ] More optical Error Handling
+- [X] Persistent State Storage Configuration 
+- [X] More optical Error Handling
+
+
+### PresistenceMiddleware features
+- [ ] Constructor with Configurable File
+- [ ] saveState method
+- [ ] loadState method
+- [ ] presistState method 
+- [ ] File Manipulation
+- [ ] File Information Retrieval
+- [ ] Custom Options for setting up custom middleware
+- [X] Versioning
 
 ### Test Commands to run
 
