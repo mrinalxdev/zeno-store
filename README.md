@@ -15,10 +15,10 @@
 - [X] Merging and patching state updates 
 - [ ] Error Handling
 - [X] Undo / Redo Function 
-- [ ] Custom Event Trigger
+- [X] Custom Event Trigger
 - [ ] Debounce State Updates
-- [ ] Batch Update Config. 
-- [ ] Deep State Comparison
+- [X] Batch Update Config. 
+- [X] Deep State Comparison
 - [ ] Persistent State Storage Configuration 
 - [ ] More optical Error Handling
 

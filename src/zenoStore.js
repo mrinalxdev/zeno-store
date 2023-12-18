@@ -205,6 +205,83 @@ class ZenoStore {
         : { ...this.state };
       this.state = nextState;
       this.notifyListeners();
-    } catch (err) {}
+    } catch (err) {
+      this.handleError(err);
+    }
+  }
+
+  //Loggin Middleware
+  logMiddleware(prevState, nextState) {
+    console.log("State Update", nextState);
+  }
+
+  triggerEvent(eventName, eventDate) {
+    if (this.eventListeners[eventName]) {
+      this.eventListeners[eventName].forEach((callback) => callback(eventDate));
+    }
+  }
+
+  //Debounce Config
+  setDebounce(delay) {
+    this.debounceDelay = delay;
+  }
+
+  endBatchUpdate() {
+    this.batchUpdatePending = false;
+    if (this.batchUpdateQueue.length > 0) {
+      const nextState = Object.assign({}, ...this.batchUpdateQueue);
+      this.batchUpdateQueue = [];
+      this.setDebounce(nextState);
+    }
+  }
+
+  qeueBatchUpdate(partialState) {
+    this.batchUpdatePending.push(partialState);
+  }
+
+  enableDeepStateComparison() {
+    this.deepStateComparison = true;
+  }
+
+  disableDeepStatComparison() {
+    this.deepStateComparison = false;
+  }
+
+  setLocalStorageKey(key) {
+    this.localStorageKey = key;
+  }
+
+  //Presist state to localstorage
+  presistentStateToLocalStorage() {
+    try {
+      localStorage.setItem(this.localStorageKey, JSON.stringify(this.state));
+    } catch (err) {
+      this.handleError(err);
+    }
+  }
+
+  //Initializing State from localStorage
+  initializeStateFromLocalStorage() {
+    try {
+      const storedState = localStorage.getItem(this.localStorageKey);
+      if (storedState) {
+        this.state = JSON.parse(storedState);
+        this.prevState = JSON.parse(storedState);
+      }
+    } catch (err) {
+      this.handleError(err);
+    }
+  }
+
+  //Optimized Error Handling
+  handleError(err){
+    if(this.errorHandler){
+      this.errorHandler(err)
+    }
+    else {
+      console.error('Error during state update: ', err)
+    }
   }
 }
+
+module.exports = ZenoStore
